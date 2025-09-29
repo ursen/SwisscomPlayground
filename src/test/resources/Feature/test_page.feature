@@ -47,3 +47,8 @@ Feature: Selenium Test Page
     Then Europe must be selected
     Then North America must be selected
     And Asia must not be selected
+
+
+#    Additional stuff that we could also test:
+#    Do all links work ? (The one for the course does not, for example)
+#    There is no proper form on the page, if it would work and gives a result message we could test this. This would need a wait.
