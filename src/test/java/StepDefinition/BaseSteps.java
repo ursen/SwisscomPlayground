@@ -1,6 +1,5 @@
 package StepDefinition;
 
-import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -44,6 +43,17 @@ public class BaseSteps {
         select.selectByVisibleText(text);
     }
 
+    protected void FindSelectByIdAndDeSelectEntryByVisibleText(String text, String id) {
+        WebElement selectElement = driver.findElement(By.id(id));
+        Select select = new Select(selectElement);
+        select.deselectByVisibleText(text);
+    }
+
+    protected void ClickSelectElementByCssSelector(String cssSelector) {
+        WebElement selectElement = driver.findElement(By.cssSelector(cssSelector));
+        selectElement.click();
+    }
+
     protected void FindCheckBoxByIdAndClickIt(String id) {
         WebElement checkbox = driver.findElement(By.id(id));
         checkbox.click();
@@ -79,15 +89,28 @@ public class BaseSteps {
     }
 
     protected void AssertThatElementInSelectIsSelectedByCssSelector(String cssSelector) {
-        WebElement maleSelectElement = driver.findElement(By.cssSelector(cssSelector));
-        assertTrue(maleSelectElement.isSelected());
+        WebElement selectElement = driver.findElement(By.cssSelector(cssSelector));
+        assertTrue(selectElement.isSelected());
+    }
+    protected void AssertThatElementInSelectIsNotSelectedByCssSelector(String cssSelector) {
+        WebElement selectElement = driver.findElement(By.cssSelector(cssSelector));
+        assertFalse(selectElement.isSelected());
     }
 
+    // This will not work fur multi selects because this checks the first selected option,
+    // In a multi select we might be looking for the second or third or last
     protected void AssertThatElementInSelectIsSelectedBySelectIdAndVisibleText(String id, String text) {
         WebElement selectElement = driver.findElement(By.id(id));
         Select select = new Select(selectElement);
         var option = select.getFirstSelectedOption();
         assertEquals(option.getText(), text);
+    }
+
+    protected void AssertThatNoElementInSelectIsSelectedBySelectId(String id) {
+        WebElement continentsVisitedSelection = driver.findElement(By.id(id));
+        Select continentsSelect = new Select(continentsVisitedSelection);
+        var options = continentsSelect.getOptions();
+        options.forEach(option -> assertFalse(option.isSelected()));
     }
 
     // Assert not inout

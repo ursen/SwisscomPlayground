@@ -30,6 +30,20 @@ Feature: Selenium Test Page
     When I select Europe
     And I select Asia
     And I select North America
-    And I select Asia
-    Then Europe and North America must be selected
+    And I deselect Asia
+    Then Europe must be selected
+    Then North America must be selected
+    And Asia must not be selected
+
+  #  This checks if the multi select list correctly selects and deselects individual items
+  #  but this time via clicks instead of direct selection.
+  #  A user will click, a user will not select
+  Scenario: Click three continents and click one again
+    Given I am on the selenium test page using Chrome
+    When I click Europe
+    And I click Asia
+    And I click North America
+    And I click Asia
+    Then Europe must be selected
+    Then North America must be selected
     And Asia must not be selected

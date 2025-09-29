@@ -84,20 +84,40 @@ public class TestPageSteps extends BaseSteps {
         SelectCountry("Asia");
     }
 
+    @When("I deselect Asia")
+    public void i_deselect_asia() {
+        DeselectCountry("Asia");
+    }
+
+    @When("I click Europe")
+    public void i_click_europe() {
+        ClickSelectElementByCssSelector("option[value=europe]");
+    }
+
+    @When("I click North America")
+    public void i_click_north_america() {
+        ClickSelectElementByCssSelector("option[value=north_america]");
+    }
+
+    @When("I click Asia")
+    public void i_click_asia() {
+        ClickSelectElementByCssSelector("option[value=asia]");
+    }
+
     @Then("I should see my input on the page")
     public void i_should_see_my_input_on_the_page() {
 
         AssertThatTextFieldIsNotEmptyAndHasTextById("firstname", "Urs");
         AssertThatTextFieldIsNotEmptyAndHasTextById("surname", "Rust");
 
-        AssertThatElementInSelectIsSelectedByCssSelector("option[value=male]");
+        AssertThatElementInSelectIsSelectedBySelectIdAndVisibleText("gender", "Male");
 
         AssertThatCheckBoxIsSelectedById("red");
 
         AssertThatTextFieldIsNotEmptyAndHasTextByXPath("/html/body/div/div/div[2]/div/form/div[5]/div/label/textarea", "This is a simple test of this page.");
 
-        AssertThatElementInSelectIsSelectedBySelectIdAndVisibleText("continent", "Asia");
-        AssertThatElementInSelectIsSelectedBySelectIdAndVisibleText("continent", "Europe");
+        AssertThatElementInSelectIsSelectedByCssSelector("option[value=asia]");
+        AssertThatElementInSelectIsSelectedByCssSelector("option[value=europe]");
 
         AssertThatCheckBoxIsSelectedById("checkbox1");
         AssertThatCheckBoxIsSelectedById("checkbox2");
@@ -116,17 +136,26 @@ public class TestPageSteps extends BaseSteps {
 
         AssertThatTextFieldIsEmptyByXPath("/html/body/div/div/div[2]/div/form/div[5]/div/label/textarea");
 
-        WebElement continentsVisitedSelection = driver.findElement(By.id("continent"));
-        Select continentsSelect = new Select(continentsVisitedSelection);
-        // The continent multi select does not have ids for the individual selections, so we just get them all and foreach them.
-        // We want to test if all of them are selected so this is fine. For individual tests we could go for value or visible text again
-        var options = continentsSelect.getOptions();
-        options.forEach(option -> assertFalse(option.isSelected()));
+        AssertThatNoElementInSelectIsSelectedBySelectId("continent");
 
         AssertThatCheckBoxIsNotSelectedById("checkbox1");
         AssertThatCheckBoxIsNotSelectedById("checkbox2");
     }
 
+    @Then("Europe must be selected")
+    public void europe_must_be_selected() {
+        AssertThatElementInSelectIsSelectedByCssSelector("option[value=europe]");
+    }
+
+    @Then("North America must be selected")
+    public void north_america_must_be_selected() {
+        AssertThatElementInSelectIsSelectedByCssSelector("option[value=north_america]");
+    }
+
+    @Then("Asia must not be selected")
+    public void asia_must_be_selected() {
+        AssertThatElementInSelectIsNotSelectedByCssSelector("option[value=asia]");
+    }
 
     @Then("The blue check box is selected and the red checkbox is not selected")
     public void the_blue_check_box_is_selected_and_the_red_checkbox_is_not_selected() {
@@ -144,4 +173,10 @@ public class TestPageSteps extends BaseSteps {
     private void SelectCountry(String country) {
         FindSelectByIdAndSelectEntryByVisibleText(country, "continent");
     }
+    private void DeselectCountry(String country) {
+        FindSelectByIdAndDeSelectEntryByVisibleText(country, "continent");
+    }
+
+    // Click and select are 2 different things. Select sets the element to state selected, click emulates a user clicking.
+
 }
